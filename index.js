@@ -6,35 +6,16 @@ let myInterval
 let count = 0 // for checking last element and stop interval
 const blockClasses = ['left-arrow','up-arrow', 'down-arrow', 'right-arrow']
 
-/*class AB {
-    constructor() {
-
-    }
-
+class Block {
+    id = setTimeout(()=>Date.now(), 10)
+    className = getRandom().itemClass
     createItem () {
         const newItem = document.createElement('div')
-        const newClass = getRandom().itemClass
-        newItem.setAttribute('class',`${newClass} drop-block`)
-        const id = Date.now()
-        document.addEventListener('keydown', {handleEvent: logKey, currentItem: newItem})
-
-        newItem.setAttribute('id', `${id}`)
-        gameFlow.appendChild(newItem)
-        newItem.addEventListener('animationend', () => {
-            //newItem.removeEventListener('keydown', logKey)
-            deleteBlock(newItem)
-        })
-
-        count++
-        if (newCount === count) {
-            clearInterval(myInterval)
-        }
-
-
-
+        newItem.setAttribute('class',`${this.className} drop-block`)
+        newItem.setAttribute('id', `${this.id}`)
+        return newItem
     }
-
-}*/
+}
 
 
 let areaHeight = parseInt(window.getComputedStyle(area).getPropertyValue('height'))
@@ -65,8 +46,9 @@ const checkTouch = (item) => {
 
 const deleteBlock = (block) => {
     //document.removeEventListener('keydown', logKey)
+    //console.log( document.getElementById(block), "!!!!!")
+
     document.getElementById(block.id).remove()
-    console.log(scoreCounter)
 
 
 }
@@ -115,10 +97,35 @@ const getRandom = () => {
 
 }
 
+const delay = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+const setDelay = async (elements) => {
+    for (let j = 0; j<elements.length; j+=1){
+        if (j === 0) {
+            gameFlow.appendChild(elements[j])
+        }
+        else {
+            await delay(1000)
+            gameFlow.appendChild(elements[j])
+        }
+        document.addEventListener('keydown', {handleEvent: logKey, currentItem: newItem})
+        elements[j].addEventListener('animationend', () => {
+            deleteBlock(elements[j])
+        })
+
+    }
+}
+
 const startGame = () => {
     console.log('the game is on')
-    myInterval = setInterval(createEl, 1000, getRandom().elements)
-
+    let elements = []
+    for (let i = 1; i<= getRandom().elements; i+=1) {
+        elements.push(new Block().createItem())
+    }
+    setDelay(elements)
+    //myInterval = setInterval(createEl, 1000, getRandom().elements)
 }
 
 
