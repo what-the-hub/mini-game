@@ -1,0 +1,83 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.game{
+    width: 500px;
+    height: 600px;
+    border: 1px solid black;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+
+}
+
+.button-start{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#touch-area{
+    width: 500px;
+    height: 100px;
+    background-color: rgba(232, 255, 204, 0.5);
+    position:absolute;
+    bottom: 0px;
+}
+#good {
+    position: relative;
+    background: rgb(255, 241, 0);
+    height: 80px;
+    top: 0px;
+}
+
+#excellent {
+    position: relative;
+    background: rgb(126, 255, 0);
+    height: 40px;
+    top: 20px;
+}
+
+.left-arrow{
+    background-color: rgb(255, 0, 0);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    z-index: 10;
+    top: 0px;
+    left: 20px;
+    animation: block 5s linear;
+}
+.left-arrow::before{
+    content: '';
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right:10px solid blue;
+    position: absolute;
+    right: 5px;
+}
+
+.up-arrow{
+    background-color: rgb(255, 0, 0);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    z-index: 10;
+    top: 0px;
+    left: 20px;
+    animation: block 5s linear;
+}
+.up-arrow::before{
+    content: '';
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid blue;
+    border-right:10px solid transparent;
+    border-left: 10px solid transparent;
+    position: absolute;
+    bottom: 5px;
+}
+
+@keyframes block{
+    0%{top: 0px}
+    100%{top: 580px}
+}
