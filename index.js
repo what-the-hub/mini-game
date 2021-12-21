@@ -2,38 +2,32 @@ let gameFlow = document.querySelector('.game')
 let area = document.getElementById("touch-area")
 let scoreElement = document.getElementById('score')
 let scoreCounter = 0 // for score
-let myInterval
-let count = 0 // for checking last element and stop interval
-const blockClasses = ['left-arrow','up-arrow', 'down-arrow', 'right-arrow']
+
+const gameFlowHeight = parseInt(window.getComputedStyle(gameFlow).getPropertyValue('height'))
+
+const blockClasses = ['left-arrow', 'up-arrow', 'down-arrow', 'right-arrow']
 
 class Block {
-    id = setTimeout(()=>Date.now(), 10)
+    id = Date.now
     className = getRandom().itemClass
-    createItem () {
+
+    createItem() {
         const newItem = document.createElement('div')
-        newItem.setAttribute('class',`${this.className} drop-block`)
+        newItem.setAttribute('class', `${this.className} drop-block`)
         newItem.setAttribute('id', `${this.id}`)
         return newItem
     }
 }
 
 
-let areaHeight = parseInt(window.getComputedStyle(area).getPropertyValue('height'))
-
-let gameFlowHeight = parseInt(window.getComputedStyle(gameFlow).getPropertyValue('height'))
-console.log(gameFlowHeight, 'game height')
-
 const checkTouch = (item) => {
-    let itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
-    let excellentArea = itemPosition >= (gameFlowHeight - 100) + 10 && itemPosition <= gameFlowHeight - 60
-    let goodArea = itemPosition >= (gameFlowHeight - 100) - 10 && itemPosition <= gameFlowHeight - 40
+    const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
+    const excellentArea = itemPosition >= (gameFlowHeight - 100) + 10 && itemPosition <= gameFlowHeight - 60
+    const goodArea = itemPosition >= (gameFlowHeight - 100) - 10 && itemPosition <= gameFlowHeight - 40
 
     if (excellentArea) {
         scoreCounter += 2
-        console.log('excellent', scoreCounter)
-
         scoreElement.textContent = scoreCounter
-        //document.getElementById(item.id).remove()
         return
     } else if (goodArea) {
         console.log('correct')
@@ -44,48 +38,9 @@ const checkTouch = (item) => {
 
 }
 
-const deleteBlock = (block) => {
-    //document.removeEventListener('keydown', logKey)
-    //console.log( document.getElementById(block), "!!!!!")
-
-    document.getElementById(block.id).remove()
-
-
-}
-
-
-const checkClick = (arrowDirection) => {
-    let columnOfArrows = document.querySelectorAll(arrowDirection)
-    console.log(columnOfArrows)
-    checkTouch(columnOfArrows[0])
-}
-
-
-function createEl(newCount, arrowDirection) {
-    //console.log(newCount, 'newCount')
-    const newItem = document.createElement('div')
-    const newClass = getRandom().itemClass
-    newItem.setAttribute('class',`${newClass} drop-block`)
-    const id = Date.now()
-    document.addEventListener('keydown', {handleEvent: logKey, currentItem: newItem})
-
-    newItem.setAttribute('id', `${id}`)
-    gameFlow.appendChild(newItem)
-    newItem.addEventListener('animationend', () => {
-        //newItem.removeEventListener('keydown', logKey)
-        deleteBlock(newItem)
-    })
-
-    count++
-    if (newCount === count) {
-        clearInterval(myInterval)
-    }
-
-}
-
 const getRandom = () => {
     const elements = Math.floor((Math.random() * 20) + 5)
-    const seconds = Math.floor(Math.random() * 2000 + 1000)
+    const seconds = Math.floor(Math.random() * 2000 + 200)
     const itemClass = blockClasses[Math.floor(Math.random() * blockClasses.length)]
 
     return {
@@ -94,59 +49,59 @@ const getRandom = () => {
         itemClass
     }
 
-
 }
 
 const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-const setDelay = async (elements) => {
-    for (let j = 0; j<elements.length; j+=1){
+const renderBlocks = async (elements) => {
+    for (let j = 0; j < elements.length; j += 1) {
         if (j === 0) {
             gameFlow.appendChild(elements[j])
-        }
-        else {
-            await delay(1000)
+        } else {
+            await delay(getRandom().seconds)
             gameFlow.appendChild(elements[j])
         }
-        document.addEventListener('keydown', {handleEvent: logKey, currentItem: newItem})
-        elements[j].addEventListener('animationend', () => {
-            deleteBlock(elements[j])
-        })
 
+        elements[j].addEventListener('animationend', () => {
+            document.getElementById(elements[j].id).remove()
+        })
     }
 }
 
 const startGame = () => {
     console.log('the game is on')
     let elements = []
-    for (let i = 1; i<= getRandom().elements; i+=1) {
+    for (let i = 1; i <= getRandom().elements; i += 1) {
         elements.push(new Block().createItem())
     }
-    setDelay(elements)
-    //myInterval = setInterval(createEl, 1000, getRandom().elements)
+    renderBlocks(elements)
+    document.addEventListener('keydown', {handleEvent: logKey, currentItem: 1})
 }
 
 
-function logKey (e) {
-    //console.log(this.className, 'className')
-    console.log(this.currentItem)
+function logKey(e) {
+    const key = e.key
 
-    if (e.key === 'ArrowLeft') {
-        //console.log('left arr')
-        checkClick('.left-arrow')
-    }
-    if (e.key === 'ArrowUp') {
-        //console.log('up arr')
-        checkClick('.up-arrow')
-    }
+    let leftColumn = document.getElementsByClassName('left-arrow')
+    let upColumn = document.getElementsByClassName('up-arrow')
+    let downColumn = document.getElementsByClassName('down-arrow')
+    let rightColumn = document.getElementsByClassName('right-arrow')
 
+    if (leftColumn.length > 0 && key === 'ArrowLeft') {
+        checkTouch(leftColumn[0])
+    }
+    if (upColumn.length > 0 && key === 'ArrowUp') {
+        checkTouch(upColumn[0])
+    }
+    if (downColumn.length > 0 && key === 'ArrowDown') {
+        checkTouch(downColumn[0])
+    }
+    if (rightColumn.length > 0 && key === 'ArrowRight') {
+        checkTouch(rightColumn[0])
+    } else return
 }
-
-//setInterval(checkTouch, 1)
-
-//area.addEventListener('click', checkClick)
 
 
 
