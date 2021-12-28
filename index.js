@@ -1,5 +1,4 @@
-let gameFlow = document.querySelector('.game')
-let area = document.getElementById("touch-area")
+let gameFlow = document.getElementById('game')
 let scoreElement = document.getElementById('score')
 let scoreCounter = 0 // for score
 
@@ -22,33 +21,31 @@ class Block {
 
 const checkTouch = (item) => {
     const itemPosition = parseInt(window.getComputedStyle(item).getPropertyValue('top'))
-    const excellentArea = itemPosition >= (gameFlowHeight - 100) + 10 && itemPosition <= gameFlowHeight - 60
-    const goodArea = itemPosition >= (gameFlowHeight - 100) - 10 && itemPosition <= gameFlowHeight - 40
+    const grMinHeight = 90
+    const grMaxHeight = 60
+    const goodMinHeight = 110
+    const goodMaxHeight = 30
+    const greatArea = itemPosition >= gameFlowHeight - grMinHeight && itemPosition <= gameFlowHeight - grMaxHeight
+    const goodArea = itemPosition >= gameFlowHeight - goodMinHeight && itemPosition <= gameFlowHeight - goodMaxHeight
 
-    if (excellentArea) {
+    if (greatArea) {
         scoreCounter += 2
-        scoreElement.textContent = scoreCounter
-        return
     } else if (goodArea) {
-        console.log('correct')
         scoreCounter += 1
-        scoreElement.textContent = scoreCounter
-        return
     }
-
+    scoreElement.textContent = scoreCounter
 }
 
 const getRandom = () => {
     const elements = Math.floor((Math.random() * 20) + 5)
-    const seconds = Math.floor(Math.random() * 2000 + 200)
+    const timeout = Math.floor(Math.random() * 2000 + 200)
     const itemClass = blockClasses[Math.floor(Math.random() * blockClasses.length)]
 
     return {
         elements,
-        seconds,
+        timeout,
         itemClass
     }
-
 }
 
 const delay = (ms) => {
@@ -56,16 +53,16 @@ const delay = (ms) => {
 }
 
 const renderBlocks = async (elements) => {
-    for (let j = 0; j < elements.length; j += 1) {
-        if (j === 0) {
-            gameFlow.appendChild(elements[j])
+    for (let i = 0; i < elements.length; i += 1) {
+        if (i === 0) {
+            gameFlow.appendChild(elements[i])
         } else {
-            await delay(getRandom().seconds)
-            gameFlow.appendChild(elements[j])
+            await delay(getRandom().timeout)
+            gameFlow.appendChild(elements[i])
         }
 
-        elements[j].addEventListener('animationend', () => {
-            document.getElementById(elements[j].id).remove()
+        elements[i].addEventListener('animationend', () => {
+            document.getElementById(elements[i].id).remove()
         })
     }
 }
@@ -77,30 +74,19 @@ const startGame = () => {
         elements.push(new Block().createItem())
     }
     renderBlocks(elements)
-    document.addEventListener('keydown', {handleEvent: logKey, currentItem: 1})
+    document.addEventListener('keydown', logKey)
 }
 
 
 function logKey(e) {
     const key = e.key
-
-    let leftColumn = document.getElementsByClassName('left-arrow')
-    let upColumn = document.getElementsByClassName('up-arrow')
-    let downColumn = document.getElementsByClassName('down-arrow')
-    let rightColumn = document.getElementsByClassName('right-arrow')
-
-    if (leftColumn.length > 0 && key === 'ArrowLeft') {
-        checkTouch(leftColumn[0])
+    const keyToColumn = {
+        'ArrowLeft': document.getElementsByClassName('left-arrow'),
+        'ArrowUp': document.getElementsByClassName('up-arrow'),
+        'ArrowDown': document.getElementsByClassName('down-arrow'),
+        'ArrowRight': document.getElementsByClassName('right-arrow')
     }
-    if (upColumn.length > 0 && key === 'ArrowUp') {
-        checkTouch(upColumn[0])
-    }
-    if (downColumn.length > 0 && key === 'ArrowDown') {
-        checkTouch(downColumn[0])
-    }
-    if (rightColumn.length > 0 && key === 'ArrowRight') {
-        checkTouch(rightColumn[0])
-    } else return
+    return keyToColumn[key].length > 0 ? checkTouch(keyToColumn[key][0]) : null
 }
 
 

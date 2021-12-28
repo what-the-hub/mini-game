@@ -2,14 +2,13 @@
     padding: 0;
     margin: 0;
 }
-.game{
+#game{
     width: 500px;
     height: 600px;
     border: 1px solid black;
     margin: auto;
     position: relative;
     overflow: hidden;
-
 }
 
 .button-start{
@@ -22,13 +21,13 @@
     height: 100px;
     background-color: rgba(232, 255, 204, 0.5);
     position:absolute;
-    bottom: 0px;
+    bottom: 0;
 }
 #good {
     position: relative;
     background: rgb(255, 241, 0);
     height: 80px;
-    top: 0px;
+    top: 0;
 }
 
 #excellent {
@@ -44,7 +43,7 @@
     height: 20px;
     position: absolute;
     z-index: 10;
-    top: 0px;
+    top: 0;
     left: 20px;
     animation: block 5s linear;
 }
@@ -63,7 +62,7 @@
     height: 20px;
     position: absolute;
     z-index: 10;
-    top: 0px;
+    top: 0;
     left: 200px;
     animation: block 5s linear;
 }
@@ -83,7 +82,7 @@
     height: 20px;
     position: absolute;
     z-index: 10;
-    top: 0px;
+    top: 0;
     left: 300px;
     animation: block 5s linear;
 }
@@ -97,14 +96,13 @@
     top: 5px;
 }
 
-
 .right-arrow{
     background-color: rgb(255, 0, 0);
     width: 20px;
     height: 20px;
     position: absolute;
     z-index: 10;
-    top: 0px;
+    top: 0;
     left: 400px;
     animation: block 5s linear;
 }
@@ -120,6 +118,6 @@
 
 
 @keyframes block{
-    0%{top: 0px}
+    0%{top: 0}
     100%{top: 580px}
 }
