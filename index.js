@@ -86,7 +86,9 @@ function logKey(e) {
         'ArrowDown': document.getElementsByClassName('down-arrow'),
         'ArrowRight': document.getElementsByClassName('right-arrow')
     }
-    return keyToColumn[key].length > 0 ? checkTouch(keyToColumn[key][0]) : null
+    if (keyToColumn[key] && keyToColumn[key].length > 0) {
+        checkTouch(keyToColumn[key][0])
+    } else return null
 }
 
 
